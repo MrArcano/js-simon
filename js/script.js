@@ -5,13 +5,26 @@
 // - raccolgo i dati li confronto con i miei numeri
 // - stampo il risultato
 
-const numOutput = document.querySelector("h1");
+const numOutput = document.querySelector("#output-num-rnd");
+const btnStart = document.querySelector("#btn-start");
+const card = document.querySelector(".card");
+const timer = document.querySelector(".timer");
+
 // DATA
 let arrayRnd = [];
 let arrayUser = [];
-const dimArray = 3;
+const min = 1;
+const max = 100;
+const dimArray = 5;
+const time = 5;
+let defaultSec = 1;
+let defaultMs = 0;
+let myIntervall;
+let s = 0;
+let ms = 0;
 
-start();
+btnStart.addEventListener("click",start);
+
 
 // **********************************
 // ------------ FUNCTION ------------
@@ -19,16 +32,21 @@ start();
 
 // START
 function start(){
-  arrayRnd =  arrayRndNumber(100,dimArray);
+  this.removeEventListener("click",start);
+  card.classList.remove("d-none");
+  arrayRnd =  arrayRndNumber(min,max,dimArray);
+  console.log(arrayRnd);
   numOutput.innerHTML = arrayRnd.join(" - ");
-  setTimeout(hideNum,5000);
+  ms = defaultSec;
+  s = defaultSec;
+  myIntervall = setInterval(timerMs,1);
 }
 
 // ARRAY RND NUM
-function arrayRndNumber(max,numberElement){
+function arrayRndNumber(min,max,numberElement){
   const arrayElement = [];
   do{
-    numRnd = Math.ceil(Math.random()*max);
+    numRnd = Math.floor(Math.random()* (max - min + 1) + min);
     if (!arrayElement.includes(numRnd)){
       arrayElement.push(numRnd);
     };
@@ -36,13 +54,16 @@ function arrayRndNumber(max,numberElement){
   return arrayElement;
 }
 
+// HIDE NUM
 function hideNum(){
   numOutput.innerHTML = "";
-  setTimeout(viewPromt,1);
+  card.classList.add("d-none");
+  setTimeout(viewPromt,100);
 }
 
 // VIEW PROMT
 function viewPromt(){
+  arrayUser = [];
   for (let i=1; i<=dimArray; i++){
     const num = parseInt(prompt(`Inserisci il n${i}:`));
     if (arrayRnd.includes(num)){
@@ -51,10 +72,34 @@ function viewPromt(){
       }
     }
   }
-  result();
+  stampResult();
 }
 
+// STAMP RESULT
+function stampResult(){
+  btnStart.addEventListener("click",start);
+  card.classList.remove("d-none");
+  numOutput.innerHTML = `
+  <p>Hai indovinato ${arrayUser.length} numeri</p>
+  <p>${arrayUser.join(" - ")}</p>
+  `;
+}
 
-function result(){
-  numOutput.innerHTML = `Hai indovinato ${arrayUser.length} numeri che sono: ${arrayUser.join(" - ")}`;
+// TIMER
+function timerMs(){
+
+  // stampa aggiornando il timer
+  timer.innerHTML = `00:${s.toString().padStart(2,0)}:${ms.toString().padStart(3,0)}`;
+
+  if (s > 0 || ms > 0){
+    if (ms == 0){
+      s--;
+      ms=999;
+    }else{
+      ms--;
+    }
+  }else{
+    clearInterval(myIntervall);
+    hideNum();
+  }
 }
