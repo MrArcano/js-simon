@@ -9,7 +9,7 @@ const numOutput = document.querySelector("h1");
 // DATA
 let arrayRnd = [];
 let arrayUser = [];
-const dimArray = 5;
+const dimArray = 3;
 
 start();
 
@@ -21,7 +21,7 @@ start();
 function start(){
   arrayRnd =  arrayRndNumber(100,dimArray);
   numOutput.innerHTML = arrayRnd.join(" - ");
-  myIntervall = setTimeout(viewPromt,5000);
+  setTimeout(hideNum,5000);
 }
 
 // ARRAY RND NUM
@@ -36,14 +36,19 @@ function arrayRndNumber(max,numberElement){
   return arrayElement;
 }
 
+function hideNum(){
+  numOutput.innerHTML = "";
+  setTimeout(viewPromt,1);
+}
 
 // VIEW PROMT
 function viewPromt(){
-  numOutput.innerHTML = "";
   for (let i=1; i<=dimArray; i++){
-    const num = parseInt(prompt("Inserisci il primo numero:"));
+    const num = parseInt(prompt(`Inserisci il n${i}:`));
     if (arrayRnd.includes(num)){
-      arrayUser.push(num);
+      if (!arrayUser.includes(num)){
+        arrayUser.push(num);
+      }
     }
   }
   result();
@@ -51,5 +56,5 @@ function viewPromt(){
 
 
 function result(){
-  numOutput.innerHTML = arrayUser.join(" - ");
+  numOutput.innerHTML = `Hai indovinato ${arrayUser.length} numeri che sono: ${arrayUser.join(" - ")}`;
 }
