@@ -9,7 +9,6 @@ const numOutput = document.querySelector("h1");
 // DATA
 let arrayRnd = [];
 let arrayUser = [];
-let myIntervall = 0;
 const dimArray = 5;
 
 start();
@@ -22,7 +21,7 @@ start();
 function start(){
   arrayRnd =  arrayRndNumber(100,dimArray);
   numOutput.innerHTML = arrayRnd.join(" - ");
-  myIntervall = setInterval(viewPromt,5000);
+  myIntervall = setTimeout(viewPromt,5000);
 }
 
 // ARRAY RND NUM
@@ -40,13 +39,17 @@ function arrayRndNumber(max,numberElement){
 
 // VIEW PROMT
 function viewPromt(){
-  clearInterval(myIntervall);
-  // numOutput.innerHTML = "";
+  numOutput.innerHTML = "";
   for (let i=1; i<=dimArray; i++){
     const num = parseInt(prompt("Inserisci il primo numero:"));
     if (arrayRnd.includes(num)){
       arrayUser.push(num);
     }
   }
+  result();
 }
 
+
+function result(){
+  numOutput.innerHTML = arrayUser.join(" - ");
+}
