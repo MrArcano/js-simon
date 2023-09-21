@@ -16,33 +16,42 @@ let arrayUser = [];
 const min = 1;
 const max = 100;
 const dimArray = 5;
-const time = 5;
-let defaultSec = 1;
+let defaultSec = 5;
 let defaultMs = 0;
 let myIntervall;
 let s = 0;
 let ms = 0;
 
+// Al click del button START
 btnStart.addEventListener("click",start);
-
 
 // **********************************
 // ------------ FUNCTION ------------
 // **********************************
 
-// START
+// -------------------------------------------------------------------------
+// ********************************* START *********************************
 function start(){
+  // rimuovo la possibilità di cliccare di nuovo il button
   this.removeEventListener("click",start);
-  card.classList.remove("d-none");
+
+  // Genero un array di [dimArray] numeri casuali senza ripetizione
   arrayRnd =  arrayRndNumber(min,max,dimArray);
   console.log(arrayRnd);
-  numOutput.innerHTML = arrayRnd.join(" - ");
-  ms = defaultSec;
-  s = defaultSec;
-  myIntervall = setInterval(timerMs,1);
-}
 
-// ARRAY RND NUM
+  // rendo visibile il mio DIV che conterrà i numeri
+  card.classList.remove("d-none");
+
+  // Stampo a schermo dentro il mio DIV
+  numOutput.innerHTML = arrayRnd.join(" - ");
+
+  // Setting var timer
+  s = defaultSec;
+  ms = defaultMs;
+  myIntervall = setInterval(timerMs,10);
+}
+// -------------------------------------------------------------------------
+// ***************************** ARRAY RND NUM *****************************
 function arrayRndNumber(min,max,numberElement){
   const arrayElement = [];
   do{
@@ -53,15 +62,33 @@ function arrayRndNumber(min,max,numberElement){
   }while(arrayElement.length < numberElement)
   return arrayElement;
 }
+// -------------------------------------------------------------------------
+// ********************************* TIMER ********************************* 
+function timerMs(){
 
-// HIDE NUM
+  // stampa aggiornando il timer
+  timer.innerHTML = `00:${s.toString().padStart(2,0)}:${ms.toString().padStart(3,0)}`;
+  if (s > 0 || ms > 0){
+    if (ms < 10){
+      s--;
+      ms=990;
+    }else{
+      ms -= 10;
+    }
+  }else{
+    clearInterval(myIntervall);
+    hideNum();
+  }
+}
+// -------------------------------------------------------------------------
+// ******************************* HIDE  NUM *******************************
 function hideNum(){
   numOutput.innerHTML = "";
   card.classList.add("d-none");
   setTimeout(viewPromt,100);
 }
-
-// VIEW PROMT
+// -------------------------------------------------------------------------
+// ****************************** VIEW  PROMT ******************************
 function viewPromt(){
   arrayUser = [];
   for (let i=1; i<=dimArray; i++){
@@ -74,8 +101,8 @@ function viewPromt(){
   }
   stampResult();
 }
-
-// STAMP RESULT
+// -------------------------------------------------------------------------
+// ***************************** STAMP  RESULT *****************************
 function stampResult(){
   btnStart.addEventListener("click",start);
   card.classList.remove("d-none");
@@ -83,23 +110,4 @@ function stampResult(){
   <p>Hai indovinato ${arrayUser.length} numeri</p>
   <p>${arrayUser.join(" - ")}</p>
   `;
-}
-
-// TIMER
-function timerMs(){
-
-  // stampa aggiornando il timer
-  timer.innerHTML = `00:${s.toString().padStart(2,0)}:${ms.toString().padStart(3,0)}`;
-
-  if (s > 0 || ms > 0){
-    if (ms == 0){
-      s--;
-      ms=999;
-    }else{
-      ms--;
-    }
-  }else{
-    clearInterval(myIntervall);
-    hideNum();
-  }
 }
