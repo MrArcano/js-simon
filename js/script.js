@@ -12,7 +12,6 @@ const timer = document.querySelector(".timer");
 
 // DATA
 let arrayRnd = [];
-let arrayUser = [];
 const min = 1;
 const max = 100;
 const dimArray = 5;
@@ -65,7 +64,6 @@ function arrayRndNumber(min,max,numberElement){
 // -------------------------------------------------------------------------
 // ********************************* TIMER ********************************* 
 function timerMs(){
-
   // stampa aggiornando il timer
   timer.innerHTML = `00:${s.toString().padStart(2,0)}:${ms.toString().padStart(3,0)}`;
   if (s > 0 || ms > 0){
@@ -90,7 +88,8 @@ function hideNum(){
 // -------------------------------------------------------------------------
 // ****************************** VIEW  PROMT ******************************
 function viewPromt(){
-  arrayUser = [];
+  // reset dell'array ogni volta che rieseguo
+  const arrayUser = [];
   for (let i=1; i<=dimArray; i++){
     const num = parseInt(prompt(`Inserisci il n${i}:`));
     if (arrayRnd.includes(num)){
@@ -99,15 +98,28 @@ function viewPromt(){
       }
     }
   }
-  stampResult();
+  endGame(arrayUser);
 }
 // -------------------------------------------------------------------------
 // ***************************** STAMP  RESULT *****************************
-function stampResult(){
+function endGame(arrayUser){
+  let text = "";
   btnStart.addEventListener("click",start);
   card.classList.remove("d-none");
-  numOutput.innerHTML = `
-  <p>Hai indovinato ${arrayUser.length} numeri</p>
-  <p>${arrayUser.join(" - ")}</p>
-  `;
+
+  if(arrayUser.length === 0){
+    text = `<p>Non hai indovinato nessun numero</p>`;
+  }else
+  if(arrayUser.length === 1){
+    text = `
+    <p>Hai indovinato un numero</p>
+    <p>${arrayUser.join(" - ")}</p>
+    `;
+  }else{
+    text = `
+    <p>Hai indovinato ${arrayUser.length} numeri</p>
+    <p>${arrayUser.join(" - ")}</p>
+    `;
+  }
+  numOutput.innerHTML = text;
 }
